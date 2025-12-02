@@ -19,6 +19,7 @@ package annotations
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/onsi/ginkgo/v2"
@@ -320,6 +321,35 @@ var _ = framework.DescribeAnnotation("auth-tls-*", func() {
 			WithHeader("Host", host).
 			Expect().
 			Status(http.StatusOK)
+	})
+
+	ginkgo.It("should escape auth-tls-match-cn to prevent config injection", func() {
+		host := "authtls-escape"
+		nameSpace := f.Namespace
+
+		payload := `CN=";return 200;#`
+
+		_, err := framework.CreateIngressMASecret(
+			f.KubeClientSet,
+			host,
+			host,
+			nameSpace)
+		assert.Nil(ginkgo.GinkgoT(), err)
+
+		annotations := map[string]string{
+			"nginx.ingress.kubernetes.io/auth-tls-secret":        nameSpace + "/" + host,
+			"nginx.ingress.kubernetes.io/auth-tls-verify-client": "on",
+			"nginx.ingress.kubernetes.io/auth-tls-match-cn":      payload,
+		}
+
+		f.EnsureIngress(framework.NewSingleIngressWithTLS(host, "/", host, []string{host}, nameSpace, framework.EchoService, 80, annotations))
+
+		expected := fmt.Sprintf("if ( $ssl_client_s_dn !~ %s ) {", strconv.Quote(payload))
+
+		f.WaitForNginxServer(host,
+			func(server string) bool {
+				return strings.Contains(server, expected)
+			})
 	})
 
 	ginkgo.It("should reload the nginx config when auth-tls-match-cn is updated", func() {
