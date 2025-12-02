@@ -22,6 +22,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"
@@ -347,6 +348,25 @@ var _ = framework.DescribeAnnotation("auth-*", func() {
 			func(server string) bool {
 				return cacheRegex.MatchString(server) &&
 					strings.Contains(server, `proxy_cache_valid 200 202 401 30m;`)
+			})
+	})
+
+	ginkgo.It("should escape auth-url to prevent config injection", func() {
+		host := "auth-escape"
+		payload := "https://auth.example.com/path\";return 200;#"
+
+		annotations := map[string]string{
+			"nginx.ingress.kubernetes.io/auth-url": payload,
+		}
+
+		ing := framework.NewSingleIngress(host, "/", host, f.Namespace, framework.EchoService, 80, annotations)
+		ing = f.EnsureIngress(ing)
+
+		f.WaitForNginxServer(host,
+			func(server string) bool {
+				expected := fmt.Sprintf("set $target %s;", strconv.Quote(payload))
+				return strings.Contains(server, expected) &&
+					strings.Contains(server, "proxy_pass $target;")
 			})
 	})
 
