@@ -20,6 +20,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -259,6 +260,33 @@ func TestIngressAuth(t *testing.T) {
 	}
 	if !auth.Secured {
 		t.Errorf("Expected true as secured but returned %v", auth.Secured)
+	}
+}
+
+func TestIngressAuthPreventsPathTraversal(t *testing.T) {
+	ing := buildIngress()
+	ing.UID = "../../escape"
+
+	data := map[string]string{}
+	data[parser.GetAnnotationWithPrefix(authTypeAnnotation)] = authType
+	data[parser.GetAnnotationWithPrefix(AuthSecretAnnotation)] = demoSecret
+	data[parser.GetAnnotationWithPrefix(authRealmAnnotation)] = authRealm
+	ing.SetAnnotations(data)
+
+	_, dir, _ := dummySecretContent(t)
+	defer os.RemoveAll(dir)
+
+	_, err := NewParser(dir, &mockSecret{}).Parse(ing)
+	if err == nil {
+		t.Fatalf("expected error when password path escapes auth directory")
+	}
+
+	if _, ok := err.(ing_errors.LocationDeniedError); !ok {
+		t.Fatalf("expected LocationDeniedError, got %T", err)
+	}
+
+	if !strings.Contains(err.Error(), "invalid password file name") {
+		t.Fatalf("unexpected error message: %v", err)
 	}
 }
 
