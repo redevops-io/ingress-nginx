@@ -1230,6 +1230,10 @@ func (s *k8sStore) setConfig(cmap *corev1.ConfigMap) {
 		klog.Warning("allow-snippet-annotations is ignored: snippet annotations are permanently disabled in this fork")
 		s.backendConfig.AllowSnippetAnnotations = false
 	}
+	if s.backendConfig.AllowCrossNamespaceResources {
+		klog.Warning("allow-cross-namespace-resources is ignored: cross-namespace references are forbidden in this fork")
+		s.backendConfig.AllowCrossNamespaceResources = false
+	}
 	if s.backendConfig.UseGeoIP2 && !nginx.GeoLite2DBExists() {
 		klog.Warning("The GeoIP2 feature is enabled but the databases are missing. Disabling")
 		s.backendConfig.UseGeoIP2 = false
