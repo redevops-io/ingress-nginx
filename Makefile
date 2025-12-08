@@ -58,7 +58,8 @@ ifneq ($(PLATFORM),)
 	PLATFORM_FLAG="--platform"
 endif
 
-REGISTRY ?= us-central1-docker.pkg.dev/k8s-staging-images/ingress-nginx
+# Updated for redevops-io fork: use GitHub Container Registry
+REGISTRY ?= ghcr.io/redevops-io/ingress-nginx
 
 BASE_IMAGE ?= $(shell cat NGINX_BASE)
 
