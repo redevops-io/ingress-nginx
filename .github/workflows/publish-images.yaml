@@ -15,8 +15,9 @@ on:
         type: boolean
 
 env:
-  REGISTRY: ghcr.io/redevops-io/ingress-nginx
+  REGISTRY: docker.io/arybach
   PLATFORMS: linux/amd64,linux/arm64
+  GOLANG_VERSION: '1.23'
 
 jobs:
   build-nginx-base:
@@ -73,6 +74,8 @@ jobs:
           context: ./images/nginx/rootfs
           platforms: ${{ env.PLATFORMS }}
           push: true
+          build-args: |
+            GOLANG_VERSION=${{ env.GOLANG_VERSION }}
           tags: |
             ${{ env.REGISTRY }}/nginx:${{ steps.nginx-version.outputs.tag }}
             ${{ env.REGISTRY }}/nginx:latest
@@ -248,6 +251,9 @@ jobs:
           file: ${{ steps.check-dockerfile.outputs.dockerfile }}
           platforms: ${{ env.PLATFORMS }}
           push: true
+          build-args: |
+            GOLANG_VERSION=${{ env.GOLANG_VERSION }}
+            BASE_IMAGE=${{ env.REGISTRY }}/nginx:latest
           tags: |
             ${{ env.REGISTRY }}/${{ matrix.image }}:${{ steps.version.outputs.version }}
             ${{ env.REGISTRY }}/${{ matrix.image }}:latest
