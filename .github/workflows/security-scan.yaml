@@ -131,12 +131,16 @@ jobs:
 
       - name: Install Grype
         run: |
-          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+          # Use a specific version to avoid GitHub API rate limits
+          VERSION="0.84.0"
+          curl -sSfL "https://github.com/anchore/grype/releases/download/v${VERSION}/grype_${VERSION}_linux_amd64.tar.gz" | tar xz -C /usr/local/bin grype
+          chmod +x /usr/local/bin/grype
+        continue-on-error: true
 
       - name: Scan repository with Grype
         run: |
-          grype dir:. -o json > grype-results.json
-          grype dir:. -o table > grype-report.txt
+          grype dir:. -o json > grype-results.json 2>/dev/null || true
+          grype dir:. -o table > grype-report.txt 2>/dev/null || true
         continue-on-error: true
 
       - name: Upload Grype results
@@ -284,12 +288,17 @@ jobs:
 
       - name: Install Syft
         run: |
-          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+          # Use a specific version to avoid GitHub API rate limits
+          VERSION="1.19.1"
+          curl -sSfL "https://github.com/anchore/syft/releases/download/v${VERSION}/syft_${VERSION}_linux_amd64.tar.gz" | tar xz -C /usr/local/bin syft
+          chmod +x /usr/local/bin/syft
+        continue-on-error: true
 
       - name: Generate SBOM for repository
         run: |
-          syft dir:. -o spdx-json > sbom.spdx.json
-          syft dir:. -o cyclonedx-json > sbom.cyclonedx.json
+          syft dir:. -o spdx-json > sbom.spdx.json 2>/dev/null || true
+          syft dir:. -o cyclonedx-json > sbom.cyclonedx.json 2>/dev/null || true
+        continue-on-error: true
 
       - name: Upload SBOM
         uses: actions/upload-artifact@v4

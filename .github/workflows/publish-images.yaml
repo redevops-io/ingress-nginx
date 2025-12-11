@@ -259,7 +259,7 @@ jobs:
           GOLANG_VERSION=${{ env.GOLANG_VERSION }}
           BASE_IMAGE=${{ env.REGISTRY }}/nginx:latest
           LUAROCKS_VERSION=v3.12.2
-          LUAROCKS_SHA=3590bcb90a75c32ba8b10d692d26838caedbc267a57db23931694abc9598c873
+          LUAROCKS_SHA=9c25fa7ab5017d60b25137ab1a4cb76e3185df1fe02df1f577f57d1a6b548a2a
           EOFARGS
           EOF
           else
