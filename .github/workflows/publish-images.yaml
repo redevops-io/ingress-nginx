@@ -191,10 +191,12 @@ jobs:
   build-support-images:
     name: Build Support Images
     runs-on: ubuntu-latest
+    needs: build-nginx-base  # Ensure nginx base is built first for e2e-test-echo
     permissions:
       contents: read
       packages: write
     strategy:
+      fail-fast: false
       matrix:
         image:
           - kube-webhook-certgen
@@ -244,6 +246,17 @@ jobs:
             exit 1
           fi
 
+      - name: Set build args for image
+        id: build-args
+        run: |
+          # Only e2e-test-echo needs BASE_IMAGE
+          if [ "${{ matrix.image }}" = "e2e-test-echo" ]; then
+            echo "args=GOLANG_VERSION=${{ env.GOLANG_VERSION }}
+            BASE_IMAGE=${{ env.REGISTRY }}/nginx:latest" >> $GITHUB_OUTPUT
+          else
+            echo "args=GOLANG_VERSION=${{ env.GOLANG_VERSION }}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Build and push support image
         uses: docker/build-push-action@v5
         with:
@@ -251,9 +264,7 @@ jobs:
           file: ${{ steps.check-dockerfile.outputs.dockerfile }}
           platforms: ${{ env.PLATFORMS }}
           push: true
-          build-args: |
-            GOLANG_VERSION=${{ env.GOLANG_VERSION }}
-            BASE_IMAGE=${{ env.REGISTRY }}/nginx:latest
+          build-args: ${{ steps.build-args.outputs.args }}
           tags: |
             ${{ env.REGISTRY }}/${{ matrix.image }}:${{ steps.version.outputs.version }}
             ${{ env.REGISTRY }}/${{ matrix.image }}:latest
