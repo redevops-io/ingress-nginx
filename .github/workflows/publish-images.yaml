@@ -254,7 +254,7 @@ jobs:
         run: |
           # Only e2e-test-echo needs BASE_IMAGE and LUAROCKS
           if [ "${{ matrix.image }}" = "e2e-test-echo" ]; then
-            cat >> $GITHUB_OUTPUT <<EOF
+            cat >> $GITHUB_OUTPUT <<'EOF'
           args<<EOFARGS
           GOLANG_VERSION=${{ env.GOLANG_VERSION }}
           BASE_IMAGE=${{ env.REGISTRY }}/nginx:latest
@@ -263,7 +263,7 @@ jobs:
           EOFARGS
           EOF
           else
-            cat >> $GITHUB_OUTPUT <<EOF
+            cat >> $GITHUB_OUTPUT <<'EOF'
           args<<EOFARGS
           GOLANG_VERSION=${{ env.GOLANG_VERSION }}
           EOFARGS
