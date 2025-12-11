@@ -77,7 +77,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Check if image exists
+        id: check-image
+        run: |
+          if docker manifest inspect ${{ env.REGISTRY }}/${{ matrix.image }}:latest >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Image ${{ matrix.image }} does not exist yet, skipping scan"
+          fi
+        continue-on-error: true
+
       - name: Run Trivy vulnerability scanner on image
+        if: steps.check-image.outputs.exists == 'true'
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: '${{ env.REGISTRY }}/${{ matrix.image }}:latest'
@@ -89,7 +101,7 @@ jobs:
 
       - name: Upload Trivy results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v4
-        if: always()
+        if: steps.check-image.outputs.exists == 'true' && always()
         with:
           sarif_file: 'trivy-${{ matrix.image }}-results.sarif'
         continue-on-error: true

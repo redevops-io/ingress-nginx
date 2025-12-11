@@ -252,12 +252,14 @@ jobs:
       - name: Set build args for image
         id: build-args
         run: |
-          # Only e2e-test-echo needs BASE_IMAGE
+          # Only e2e-test-echo needs BASE_IMAGE and LUAROCKS
           if [ "${{ matrix.image }}" = "e2e-test-echo" ]; then
             cat >> $GITHUB_OUTPUT <<EOF
           args<<EOFARGS
           GOLANG_VERSION=${{ env.GOLANG_VERSION }}
           BASE_IMAGE=${{ env.REGISTRY }}/nginx:latest
+          LUAROCKS_VERSION=v3.12.2
+          LUAROCKS_SHA=3590bcb90a75c32ba8b10d692d26838caedbc267a57db23931694abc9598c873
           EOFARGS
           EOF
           else
