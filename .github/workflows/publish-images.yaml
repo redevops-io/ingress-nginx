@@ -187,9 +187,9 @@ jobs:
   #             cache-to: type=gha,mode=max
   #             labels: |
   #               org.opencontainers.image.source=${{ github.repositoryUrl }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.version=${{ steps.version.outputs.version }}
-            org.opencontainers.image.created=${{ github.event.head_commit.timestamp }}
+#               org.opencontainers.image.revision=${{ github.sha }}
+#               org.opencontainers.image.version=${{ steps.version.outputs.version }}
+#               org.opencontainers.image.created=${{ github.event.head_commit.timestamp }}
 
   build-support-images:
     name: Build Support Images
