@@ -96,7 +96,7 @@ jobs:
 
       - name: Upload NGINX_BASE artifact
         if: steps.check-nginx.outputs.exists == 'false'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: nginx-base-ref
           path: NGINX_BASE
