@@ -71,7 +71,7 @@ var (
 		"when secure backend enabled": {
 			"/",
 			"/",
-			"/",
+			`"/"`,
 			"proxy_pass https://upstream_balancer;",
 			"proxy_pass https://upstream_balancer;",
 			false,
@@ -82,7 +82,7 @@ var (
 		"when secure backend and dynamic config enabled": {
 			"/",
 			"/",
-			"/",
+			`"/"`,
 			"proxy_pass https://upstream_balancer;",
 			"proxy_pass https://upstream_balancer;",
 			false,
@@ -93,7 +93,7 @@ var (
 		"when secure backend, stickiness and dynamic config enabled": {
 			"/",
 			"/",
-			"/",
+			`"/"`,
 			"proxy_pass https://upstream_balancer;",
 			"proxy_pass https://upstream_balancer;",
 			true,
@@ -104,7 +104,7 @@ var (
 		"invalid redirect / to / with dynamic config enabled": {
 			"/",
 			"/",
-			"/",
+			`"/"`,
 			"proxy_pass http://upstream_balancer;",
 			"proxy_pass $scheme://upstream_balancer;",
 			false,
@@ -115,7 +115,7 @@ var (
 		"invalid redirect / to /": {
 			"/",
 			"/",
-			"/",
+			`"/"`,
 			"proxy_pass http://upstream_balancer;",
 			"proxy_pass $scheme://upstream_balancer;",
 			false,

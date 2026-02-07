@@ -331,6 +331,7 @@ var funcMap = text_template.FuncMap{
 	"buildMirrorLocations":               buildMirrorLocations,
 	"shouldLoadAuthDigestModule":         shouldLoadAuthDigestModule,
 	"buildServerName":                    buildServerName,
+	"sanitizeQuotedRegex":               sanitizeQuotedRegex,
 	"buildCorsOriginRegex":               buildCorsOriginRegex,
 }
 
@@ -526,16 +527,30 @@ func buildLocation(input interface{}, enforceRegex bool) string {
 		return slash
 	}
 
-	path := location.Path
+	path := sanitizeQuotedRegex(location.Path)
 	if enforceRegex {
 		return fmt.Sprintf(`~* "^%s"`, path)
 	}
 
 	if location.PathType != nil && *location.PathType == networkingv1.PathTypeExact {
-		return fmt.Sprintf(`= %s`, path)
+		return fmt.Sprintf(`= "%s"`, path)
 	}
 
-	return path
+	return fmt.Sprintf(`"%s"`, path)
+}
+
+// sanitizeQuotedRegex escapes backslashes and double quotes in a location path
+// so paths cannot escape NGINX configuration.
+func sanitizeQuotedRegex(path string) string {
+	builder := strings.Builder{}
+	builder.Grow(2 * len(path))
+	for _, r := range path {
+		if r == '\\' || r == '"' {
+			builder.WriteByte('\\')
+		}
+		builder.WriteRune(r)
+	}
+	return builder.String()
 }
 
 func buildAuthLocation(input interface{}, globalExternalAuthURL string) string {
