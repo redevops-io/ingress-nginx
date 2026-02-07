@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   report:
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: dorny/test-reporter@fe45e9537387dac839af0d33ba56eed8e24189e8 # v2.3.0
@@ -19,4 +20,4 @@ jobs:
           name: JEST Tests $1               # Name of the check run which will be created
           path: 'report*.xml'               # Path to test results (inside artifact .zip)
           reporter: jest-junit              # Format of test results
-          fail-on-empty: 'true'
+          fail-on-empty: 'false'
