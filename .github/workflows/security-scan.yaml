@@ -240,6 +240,38 @@ jobs:
           args: '-fmt sarif -out gosec-results.sarif ./...'
         continue-on-error: true
 
+      - name: Fix Gosec SARIF relationships
+        # Some versions of gosec emit non-object entries in rules[].relationships
+        # which makes the SARIF invalid for upload. Run a small fixer script
+        # before calling the upload action.
+        run: |
+          python3 .github/scripts/fix_gosec_sarif.py gosec-results.sarif
+        continue-on-error: true
+
+      - name: Validate Gosec SARIF (lightweight)
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('gosec-results.sarif')
+          data = json.loads(path.read_text(encoding='utf-8'))
+
+          if not isinstance(data, dict):
+              raise SystemExit('SARIF is not a JSON object')
+          if data.get('version') is None:
+              raise SystemExit('SARIF missing version')
+          runs = data.get('runs')
+          if not isinstance(runs, list) or not runs:
+              raise SystemExit('SARIF runs missing or empty')
+          run0 = runs[0]
+          tool = (run0 or {}).get('tool', {})
+          driver = (tool or {}).get('driver', {})
+          if not driver.get('name'):
+              raise SystemExit('SARIF tool.driver.name missing')
+          print('SARIF validation passed')
+          PY
+
       - name: Upload Gosec results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v4
         if: always()
