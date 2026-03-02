@@ -93,9 +93,8 @@ jobs:
           go-version: ${{ env.GO_VERSION }}
 
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v4
+        uses: golangci/golangci-lint-action@v7
         with:
-          version: latest
           args: --timeout=10m
 
       - name: Check Lua code
@@ -171,8 +170,9 @@ jobs:
           make build
           make image
           
-          # Load image into kind
-          kind load docker-image ingress-nginx/controller:latest
+          # Load image into kind using the registry and tag from the Makefile
+          TAG=$(cat TAG)
+          kind load docker-image ghcr.io/redevops-io/ingress-nginx/controller:${TAG}
 
       - name: Deploy ingress-nginx
         run: |
@@ -187,11 +187,12 @@ jobs:
 
       - name: Run e2e tests
         run: |
+          TAG=$(cat TAG)
           cd test/e2e
           go test -v -timeout 30m ./... \
             -ginkgo.focus="\[Conformance\]" \
             -ginkgo.skip="should.*slow" \
-            --e2e-test-image=ingress-nginx/controller:latest
+            --e2e-test-image=ghcr.io/redevops-io/ingress-nginx/controller:${TAG}
 
       - name: Collect logs on failure
         if: failure()
@@ -358,7 +359,7 @@ jobs:
 
       - name: Run benchmarks
         run: |
-          go test -bench=. -benchmem -run=^$ ./... > benchmark.txt
+          go test -bench=. -benchmem -run=^$ ./internal/... ./pkg/... > benchmark.txt
           cat benchmark.txt
 
       - name: Upload benchmark results
