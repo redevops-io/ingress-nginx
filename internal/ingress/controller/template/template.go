@@ -331,7 +331,7 @@ var funcMap = text_template.FuncMap{
 	"buildMirrorLocations":               buildMirrorLocations,
 	"shouldLoadAuthDigestModule":         shouldLoadAuthDigestModule,
 	"buildServerName":                    buildServerName,
-	"sanitizeQuotedRegex":               sanitizeQuotedRegex,
+	"sanitizeQuotedRegex":                sanitizeQuotedRegex,
 	"buildCorsOriginRegex":               buildCorsOriginRegex,
 }
 

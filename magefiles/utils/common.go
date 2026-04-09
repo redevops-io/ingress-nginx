@@ -17,7 +17,6 @@ limitations under the License.
 package utils
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"net"
@@ -103,7 +102,7 @@ func DownloadFile(url string) (string, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return "", errors.New(fmt.Sprintf("could not retrieve file, response from server %d for file %s", resp.StatusCode, url))
+		return "", fmt.Errorf("could not retrieve file, response from server %d for file %s", resp.StatusCode, url)
 	}
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {

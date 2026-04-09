@@ -74,7 +74,7 @@ func (Release) NewReleaseFromOld(version, oldversion string) {
 func (Release) E2EDocs() {
 	e2edocs, err := utils.GenerateE2EDocs()
 	utils.CheckIfError(err, "error on template")
-	err = os.WriteFile("docs/e2e-tests.md", []byte(e2edocs), 0644)
+	err = os.WriteFile("docs/e2e-tests.md", []byte(e2edocs), 0o644)
 	utils.CheckIfError(err, "Could not write new e2e test file ")
 }
 
@@ -152,13 +152,13 @@ func newRelease(version, oldversion string) {
 }
 
 // the index.md doc needs the controller version updated
-func updateIndexMD(old, new string) error {
+func updateIndexMD(old, newVersion string) error {
 	utils.Info("Updating Deploy docs with new version")
 	data, err := os.ReadFile(INDEX_DOCS)
 	utils.CheckIfError(err, "Could not read INDEX_DOCS file %s", INDEX_DOCS)
 	datString := string(data)
-	datString = strings.Replace(datString, old, new, -1)
-	err = os.WriteFile(INDEX_DOCS, []byte(datString), 0644)
+	datString = strings.Replace(datString, old, newVersion, -1)
+	err = os.WriteFile(INDEX_DOCS, []byte(datString), 0o644)
 	if err != nil {
 		utils.ErrorF("Could not write new %s %s", INDEX_DOCS, err)
 		return err

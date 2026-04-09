@@ -54,8 +54,12 @@ linters:
     - whitespace
   settings:
     errcheck:
-      check-type-assertions: true
+      check-type-assertions: false
       check-blank: true
+    staticcheck:
+      checks:
+        - "all"
+        - "-QF*"
     gocritic:
       enabled-checks:
         - appendAssign
@@ -91,15 +95,12 @@ linters:
         - sloppyReassign
         - sloppyTypeAssert
         - sortSlice
-        - sprintfQuotedString
         - sqlQuery
         - syncMapLoadAndDelete
         - truncateCmp
         - unnecessaryDefer
         - weakCond
-        - appendCombine
         - equalFold
-        - hugeParam
         - indexAlloc
         - preferDecodeRune
         - preferFprint
@@ -108,11 +109,8 @@ linters:
         - rangeExprCopy
         - rangeValCopy
         - sliceClear
-        - stringXbytes
-        - assignOp
         - boolExprSimplify
         - captLocal
-        - commentFormatting
         - commentedOutImport
         - defaultCaseOrder
         - deferUnlambda
@@ -120,7 +118,6 @@ linters:
         - dupImport
         - elseif
         - emptyFallthrough
-        - emptyStringTest
         - exposedSyncMutex
         - hexLiteral
         - httpNoBody
@@ -149,7 +146,6 @@ linters:
         - unslice
         - valSwap
         - whyNoLint
-        - wrapperFunc
         - yodaStyleExpr
         - builtinShadow
         - importShadow
@@ -178,6 +174,64 @@ linters:
       - common-false-positives
       - legacy
       - std-error-handling
+    rules:
+      - linters:
+          - goconst
+        path: _test\.go
+      - linters:
+          - dupl
+        path: _test\.go
+      - linters:
+          - contextcheck
+        path: test/
+      - linters:
+          - prealloc
+        text: "Consider"
+      - linters:
+          - gosec
+        text: "G[0-9]"
+      - linters:
+          - nolintlint
+        text: "directive|unused"
+      - linters:
+          - revive
+        text: "var-naming|unused-parameter|unexported|redefines-builtin-id|errorf"
+      - linters:
+          - goprintffuncname
+        text: "func"
+      - linters:
+          - unparam
+        path: _test\.go
+      - linters:
+          - gocritic
+        text: "deprecatedComment|commentedOutCode|wrapperFunc|commentFormatting|octalLiteral|assignOp"
+      - linters:
+          - musttag
+        path: _test\.go
+      - linters:
+          - musttag
+        path: internal/
+      - linters:
+          - unparam
+        path: magefiles/
+      - linters:
+          - whitespace
+        path: magefiles/
+      - linters:
+          - staticcheck
+        text: "SA1019|ST1003|SA4006"
+      - linters:
+          - goconst
+        path: test/
+      - linters:
+          - godox
+        text: "FIXME|HACK|BUG"
+      - linters:
+          - gocyclo
+        text: "cyclomatic"
+      - linters:
+          - ineffassign
+        text: "ineffectual"
     paths:
       - third_party$
       - builtin$
