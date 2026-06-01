@@ -759,30 +759,34 @@ func TestTemplateWithData(t *testing.T) {
 func BenchmarkTemplateWithData(b *testing.B) {
 	pwd, err := os.Getwd()
 	if err != nil {
-		b.Errorf("unexpected error: %v", err)
+		b.Fatalf("unexpected error: %v", err)
 	}
 	f, err := os.Open(path.Join(pwd, "../../../../test/data/config.json"))
 	if err != nil {
-		b.Errorf("unexpected error reading json file: %v", err)
+		b.Fatalf("unexpected error reading json file: %v", err)
 	}
 	defer f.Close()
 	data, err := os.ReadFile(f.Name())
 	if err != nil {
-		b.Error("unexpected error reading json file: ", err)
+		b.Fatal("unexpected error reading json file: ", err)
 	}
 	var dat config.TemplateConfig
 	if err := jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal(data, &dat); err != nil {
-		b.Errorf("unexpected error unmarshalling json: %v", err)
+		b.Fatalf("unexpected error unmarshalling json: %v", err)
 	}
+	if dat.ListenPorts == nil {
+		dat.ListenPorts = &config.ListenPorts{}
+	}
+	dat.Cfg.DefaultSSLCertificate = &ingress.SSLCert{}
 
 	ngxTpl, err := NewTemplate(nginx.TemplatePath)
 	if err != nil {
-		b.Errorf("invalid NGINX template: %v", err)
+		b.Fatalf("invalid NGINX template: %v", err)
 	}
 
 	for i := 0; i < b.N; i++ {
 		if _, err := ngxTpl.Write(&dat); err != nil {
-			b.Errorf("unexpected error writing template: %v", err)
+			b.Fatalf("unexpected error writing template: %v", err)
 		}
 	}
 }
