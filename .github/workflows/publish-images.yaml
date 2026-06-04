@@ -69,7 +69,7 @@ jobs:
       - name: Build and push NGINX base image
         id: build
         if: steps.check-nginx.outputs.exists == 'false'
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./images/nginx/rootfs
           platforms: ${{ env.PLATFORMS }}
@@ -170,7 +170,7 @@ jobs:
   #             fi
   #   
   #         - name: Build and push controller image
-  #           uses: docker/build-push-action@v5
+  #           uses: docker/build-push-action@v6
   #           with:
   #             context: .
   #             file: ${{ steps.dockerfile.outputs.file }}
@@ -271,7 +271,7 @@ jobs:
           fi
 
       - name: Build and push support image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ${{ steps.check-dockerfile.outputs.context }}
           file: ${{ steps.check-dockerfile.outputs.dockerfile }}
