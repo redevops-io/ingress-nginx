@@ -53,7 +53,7 @@ jobs:
           severity: 'CRITICAL,HIGH,MEDIUM'
 
       - name: Upload Trivy report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: trivy-repo-report
           path: trivy-repo-report.txt
@@ -118,7 +118,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload Trivy report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: trivy-${{ matrix.image }}-report
           path: 'trivy-${{ matrix.image }}-report.txt'
@@ -147,7 +147,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload Grype results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: grype-report
           path: |
@@ -176,7 +176,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload govulncheck report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: govulncheck-report
           path: govulncheck-report.txt
@@ -340,7 +340,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload SBOM
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: sbom
           path: |
