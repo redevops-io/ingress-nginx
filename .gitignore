@@ -61,3 +61,5 @@ cmd/plugin/release/LICENSE
 tmp/
 test/junitreports/
 tests/__snapshot__
+# Claude Code local session dir
+.claude/
