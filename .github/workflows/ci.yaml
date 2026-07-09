@@ -43,6 +43,8 @@ jobs:
       go: ${{ steps.filter.outputs.go }}
       charts: ${{ steps.filter.outputs.charts }}
       baseimage: ${{ steps.filter.outputs.baseimage }}
+      docs: ${{ steps.filter.outputs.docs }}
+      lua: ${{ steps.filter.outputs.lua }}
 
     steps:
 
