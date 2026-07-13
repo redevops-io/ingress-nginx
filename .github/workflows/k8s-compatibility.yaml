@@ -22,7 +22,7 @@ jobs:
       k8s-versions: ${{ steps.versions.outputs.matrix }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Determine Kubernetes versions to test
         id: versions
@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Get go version
         run: echo "GO_VERSION=$(cat GOLANG_VERSION)" >> $GITHUB_ENV
@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Get go version
         run: echo "GO_VERSION=$(cat GOLANG_VERSION)" >> $GITHUB_ENV
@@ -117,7 +117,7 @@ jobs:
         k8s-version: ${{ fromJson(needs.generate-matrix.outputs.k8s-versions) }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Get go version
         run: echo "GO_VERSION=$(cat GOLANG_VERSION)" >> $GITHUB_ENV
@@ -224,7 +224,7 @@ jobs:
       issues: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Generate report
         id: report
@@ -318,7 +318,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install pluto
         run: |
@@ -347,7 +347,7 @@ jobs:
     needs: [unit-tests]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Get go version
         run: echo "GO_VERSION=$(cat GOLANG_VERSION)" >> $GITHUB_ENV
