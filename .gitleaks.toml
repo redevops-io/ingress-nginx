@@ -1,0 +1,25 @@
+# gitleaks config for ingress-nginx.
+#
+# The secret-scan workflow runs `gitleaks detect` with the default ruleset, which
+# flags the sample credentials and TLS material that legitimately live in this
+# upstream tree: documentation examples (`curl -u user:pass`, JWT samples), Go
+# `*_test.go` fixtures, e2e test data, and the throwaway test certificates under
+# rootfs lua test fixtures. None are production secrets. This allowlist scopes the
+# scan to real code so a genuine committed secret still fails the build.
+title = "ingress-nginx"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Upstream test fixtures, docs examples, and test code — not real secrets."
+paths = [
+  # Documentation examples containing illustrative credentials.
+  '''docs/examples/.*''',
+  # Go test files and their inline fixtures.
+  '''.*_test\.go$''',
+  # End-to-end test suite (test data, sample certs/keys).
+  '''test/e2e/.*''',
+  # Throwaway TLS certs/keys used by the lua unit tests.
+  '''rootfs/etc/nginx/lua/test/.*''',
+]
