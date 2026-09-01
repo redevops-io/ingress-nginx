@@ -31,7 +31,7 @@ jobs:
       nginx-digest: ${{ steps.build.outputs.digest }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -116,7 +116,7 @@ jobs:
   #   # Disabled for now to focus on nginx base and support images
   #       steps:
   #         - name: Checkout code
-  #           uses: actions/checkout@v4
+  #           uses: actions/checkout@v7
   #   
   #         - name: Set up Docker Buildx
   #           uses: docker/setup-buildx-action@v3
@@ -212,7 +212,7 @@ jobs:
           - go-grpc-greeter-server
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -298,7 +298,7 @@ jobs:
 #      contents: write
 #    steps:
 #      - name: Checkout code
-#        uses: actions/checkout@v4
+#        uses: actions/checkout@v7
 #        with:
 #          fetch-depth: 0
 #
@@ -348,7 +348,7 @@ jobs:
 #      contents: write
 #    steps:
 #      - name: Checkout code
-#        uses: actions/checkout@v4
+#        uses: actions/checkout@v7
 #
 #      - name: Get version
 #        id: version
