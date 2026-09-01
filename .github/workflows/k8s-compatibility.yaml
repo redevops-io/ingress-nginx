@@ -95,7 +95,9 @@ jobs:
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@82606bf257cbaff209d206a39f5134f0cfbfd2ee # v9.2.1
         with:
-          version: v2.0.2
+          # No version pin: v2.0.2 is no longer supported by the action (needs
+          # >= v2.1.0), so use the action's default supported release — matching
+          # .github/workflows/golangci-lint.yml.
           only-new-issues: true
           args: --timeout=10m
 
