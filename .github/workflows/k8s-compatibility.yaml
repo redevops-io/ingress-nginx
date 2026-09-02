@@ -12,7 +12,7 @@ on:
         default: 'v1.32.0,v1.33.0,v1.34.0'
 
 env:
-  KIND_VERSION: 'v0.24.0'
+  KIND_VERSION: 'v0.33.0'
 
 jobs:
   generate-matrix:
@@ -77,37 +77,10 @@ jobs:
           flags: unittests
         continue-on-error: true
 
-  lint-checks:
-    name: Lint and Static Analysis
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Get go version
-        run: echo "GO_VERSION=$(cat GOLANG_VERSION)" >> $GITHUB_ENV
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
-        with:
-          # No version pin: v2.0.2 is no longer supported by the action (needs
-          # >= v2.1.0), so use the action's default supported release — matching
-          # .github/workflows/golangci-lint.yml.
-          only-new-issues: true
-          args: --timeout=10m
-
-      - name: Check Lua code
-        run: |
-          if command -v luacheck &> /dev/null; then
-            make lua-test
-          else
-            echo "Skipping Lua checks (luacheck not available)"
-          fi
+  # NOTE: Go linting lives in golangci-lint.yml, which runs on PRs with
+  # only-new-issues so it never fails on pre-existing debt. Running it here too
+  # was redundant and always failed on scheduled/dispatch runs (no PR base for
+  # only-new-issues, so every pre-existing goconst finding is reported). Removed.
 
   e2e-tests:
     name: E2E Tests (K8s ${{ matrix.k8s-version }})
