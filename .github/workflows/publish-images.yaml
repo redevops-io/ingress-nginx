@@ -17,7 +17,7 @@ on:
 env:
   REGISTRY: docker.io/arybach
   PLATFORMS: linux/amd64,linux/arm64
-  GOLANG_VERSION: '1.25.4'
+  GOLANG_VERSION: '1.26.0'
 
 jobs:
   build-nginx-base:
