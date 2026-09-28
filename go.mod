@@ -33,12 +33,12 @@ require (
 	gopkg.in/go-playground/pool.v3 v3.1.1
 	gopkg.in/mcuadros/go-syslog.v2 v2.3.0
 	helm.sh/helm/v3 v3.19.2
-	k8s.io/api v0.35.2
+	k8s.io/api v0.37.1
 	k8s.io/apiextensions-apiserver v0.35.1
-	k8s.io/apimachinery v0.37.0
+	k8s.io/apimachinery v0.37.1
 	k8s.io/apiserver v0.35.1
 	k8s.io/cli-runtime v0.35.1
-	k8s.io/client-go v0.35.2
+	k8s.io/client-go v0.37.1
 	k8s.io/code-generator v0.35.1
 	k8s.io/component-base v0.35.1
 	k8s.io/klog/v2 v2.140.0
@@ -107,7 +107,6 @@ require (
 	github.com/google/gnostic-models v0.7.1 // indirect
 	github.com/google/pprof v0.0.0-20251114195745-4902fdda35c8 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
