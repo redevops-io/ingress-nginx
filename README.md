@@ -1,5 +1,8 @@
-# Ingress NGINX Controller (redevops fork)
+# Ingress NGINX Controller (redevops copy of kubernetes/ingress-nginx)
 
+> **Provenance notice.** This is **not a GitHub fork**; it is a detached copy of [kubernetes/ingress-nginx](https://github.com/kubernetes/ingress-nginx) (archived upstream), imported on 2025-12-02. Closest matching upstream release: `controller-v1.14.0` (baseline commit to be confirmed; see [PROVENANCE.md](PROVENANCE.md)). Status: unsupported / not independently validated; see [STATUS.md](STATUS.md). The badges, docs and changelog below are largely inherited from upstream.
+
+<!-- Badges: CII Best Practices (project 5691) refers to the upstream kubernetes/ingress-nginx project, not this repository. -->
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/5691/badge)](https://bestpractices.coreinfrastructure.org/projects/5691)
 [![Go Report Card](https://goreportcard.com/badge/github.com/redevops-io/ingress-nginx)](https://goreportcard.com/report/github.com/redevops-io/ingress-nginx)
 [![GitHub license](https://img.shields.io/github/license/redevops-io/ingress-nginx.svg)](LICENSE)
@@ -13,17 +16,22 @@ balancer.
 
 > **Project status**
 >
-> This repository is a security-hardened fork of the original `kubernetes/ingress-nginx` project and is maintained by the
-> redevops.io team. The upstream repository is currently in maintenance mode; this fork continues to deliver CVE fixes,
-> regression tests, and Kubernetes compatibility updates while remaining API-compatible with the community controller.
+> This repository is a detached copy of `kubernetes/ingress-nginx` maintained by the redevops.io team (it is not a
+> GitHub fork). The upstream repository is archived. The import commit was titled "with security hardening", and later
+> commits include small changes (for example annotation and quoting changes, CI updates, dependency bumps; see
+> [PROVENANCE.md](PROVENANCE.md)), but **this repository does not publish a list of CVEs fixed**, so "security-hardened"
+> and "CVE fixes" are **unsupported claims**: no CVE list in this repository. Do not assume it receives security patches.
+> The Go Report Card badge points at this repository's path and has not been checked; the CII badge is upstream's.
 
 [Learn more about Ingress on the Kubernetes documentation site](https://kubernetes.io/docs/concepts/services-networking/ingress/).
 
 ## Get started
 
 See the [Getting Started](https://kubernetes.github.io/ingress-nginx/deploy/) document. The deployment manifests continue
-to work with this fork; replace container/image references with the images published under the `ghcr.io/redevops-io`
-namespace.
+to work with the upstream controller; **this repository publishes no images**: there are 0 GitHub releases and no
+`ingress-nginx` package in the `redevops-io` organisation's GHCR packages (checked 2026-10-15). Use the upstream
+images (`registry.k8s.io/ingress-nginx/...`) or build your own from this source; references to `ghcr.io/redevops-io`
+ingress-nginx images in older text or workflow comments do not correspond to published artifacts.
 
 Do not use in multi-tenant Kubernetes production installations. This project assumes that users that can create Ingress objects are administrators of the cluster. See the [FAQ](https://kubernetes.github.io/ingress-nginx/faq/#faq) for more.
 
@@ -31,26 +39,27 @@ Do not use in multi-tenant Kubernetes production installations. This project ass
 
 If you encounter issues, review the [troubleshooting docs](docs/troubleshooting.md) and
 [file an issue](https://github.com/redevops-io/ingress-nginx/issues/new/choose). We track all bug reports, feature
-requests, and CVE backports in this repository. You can also reach the maintainers in the `#redevops-ingress` channel on
-the Kubernetes Slack or by opening a GitHub Discussion.
+requests, and CVE backports in this repository. A `#redevops-ingress` Slack channel is mentioned historically but is
+**unverified** (not confirmed to exist); use GitHub Issues.
 
 ## Changelog
 
-See [the list of releases](https://github.com/redevops-io/ingress-nginx/releases) for all changes.
+This repository has **0 GitHub releases** (checked 2026-10-15), so the releases page is empty. Upstream release notes:
+[kubernetes/ingress-nginx releases](https://github.com/kubernetes/ingress-nginx/releases).
 For detailed changes for each release, please check the [changelog-$version.md](./changelog) file for the release version.
 For detailed changes on the `ingress-nginx` helm chart, please check the changelog folder for a specific version.
 [CHANGELOG-$current-version.md](./charts/ingress-nginx/changelog) file.
 
 ### Kubernetes compatibility policy
 
-We test every release line against the three most recent Kubernetes minors (`n`, `n-1`, `n-2`) as soon as upstream RC
-builds become available. Each patch release in this repository is validated with:
+The text below is inherited from this repository's earlier README and describes intended CI coverage, not verified
+results; no release has been cut from this repository. Intended validation:
 
 - Kind- and Kops-based CI suites that cover `amd64` and `arm64` images
 - The conformance-focused e2e suites under `test/e2e/...`
-- CVE regression tests covering recent mitigations (auth URL quoting, snippet lockdown, mirror injection, etc.)
+- CVE regression tests covering recent mitigations (auth URL quoting, snippet lockdown, mirror injection, etc.): not located in this tree on 2026-10-15; unverified
 
-Supported versions for this fork mean that those CI suites are passing for the Kubernetes versions listed in the table
+"Supported" in the table below (inherited from upstream) means that those CI suites are passing for the Kubernetes versions listed in the table
 below. Ingress NGINX **may** function on older clusters, but that scenario receives best-effort support only.
 
 | Supported | Ingress-NGINX version | k8s supported version         | Alpine Version | Nginx Version | Helm Chart Version |
