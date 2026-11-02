@@ -180,7 +180,7 @@ jobs:
 
       - name: Upload logs
         if: failure()
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: e2e-logs-${{ matrix.k8s-version }}
           path: /tmp/logs
@@ -338,7 +338,7 @@ jobs:
           cat benchmark.txt
 
       - name: Upload benchmark results
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: benchmark-results
           path: benchmark.txt
